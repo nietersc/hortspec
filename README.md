@@ -38,7 +38,7 @@ solar_example <- hortspec::astm_solar_data |>
 
 ``` r
 
-print(solar_example$color_fractions)
+solar_example$color_fractions
 #> # A tibble: 8 × 2
 #>   color percent_of_total
 #>   <fct>            <dbl>
@@ -50,6 +50,25 @@ print(solar_example$color_fractions)
 #> 6 fr-a               NaN
 #> 7 fr-b               NaN
 #> 8 nir                NaN
+```
+
+``` r
+
+test <- print(solar_example$parsed_dataframe)
+#> # A tibble: 1,700 × 3
+#>    wavelength trapz_est color
+#>         <dbl>     <dbl> <chr>
+#>  1        301         0 uv-b 
+#>  2        302         0 uv-b 
+#>  3        303         0 uv-b 
+#>  4        304         0 uv-b 
+#>  5        305         0 uv-b 
+#>  6        306         0 uv-b 
+#>  7        307         0 uv-b 
+#>  8        308         0 uv-b 
+#>  9        309         0 uv-b 
+#> 10        310         0 uv-b 
+#> # ℹ 1,690 more rows
 ```
 
 ## Example Watts·m^(2) to µmol·m<sup>(-2)·s</sup>(-1) conversion

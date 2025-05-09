@@ -64,11 +64,11 @@ calc_color_fractions <- function(df, value_col, wavelength_col, exclude_colors =
 
   # Remove excluded colors
   if (!is.null(exclude_colors)) {
-    available_colors <- base::setdiff(available_colors, exclude_colors)
+    available_colors <- dplyr::setdiff(available_colors, exclude_colors)
   }
 
   # Find missing ranges
-  missing_colors <- base::setdiff(names(ranges), available_colors)
+  missing_colors <- dplyr::setdiff(names(ranges), available_colors)
 
   # Warn only if missing ranges are not all excluded
   if (length(missing_colors) > 0 &&
@@ -92,7 +92,7 @@ calc_color_fractions <- function(df, value_col, wavelength_col, exclude_colors =
   }
 
   # Filter data to only wavelengths within available ranges
-  parsed_colors <- df |>
+supressWarnings({  parsed_colors <- df |>
     dplyr::mutate(
       wavelength = !!wavelength_col,
       color = sapply(wavelength, assign_color),
@@ -118,8 +118,8 @@ calc_color_fractions <- function(df, value_col, wavelength_col, exclude_colors =
     parsed_colors <- parsed_colors |>
       dplyr::arrange(wavelength) |>
       dplyr::mutate(
-        delta_w = ifelse(row_number() == 1, NA, wavelength - stats::lag(wavelength)),
-        trapz_est = ifelse(row_number() == 1, NA, delta_w * (value + stats::lag(value)) / 2))
+        delta_w = ifelse(dplyr::row_number() == 1, NA, wavelength - dplyr::lag(wavelength)),
+        trapz_est = ifelse(dplyr::row_number() == 1, NA, delta_w * (value + dplyr::lag(value)) / 2))
 
 
 
@@ -145,6 +145,6 @@ calc_color_fractions <- function(df, value_col, wavelength_col, exclude_colors =
   # Return the color fraction summary and transformed dataframe
     return(list(color_fractions = color_fractions |> dplyr::select(-trapz_sum),
                 parsed_dataframe = parsed_colors |> dplyr::select(wavelength, trapz_est, color)|>
-                  tidyr::drop_na(trapz_est)))
+                  tidyr::drop_na(trapz_est)))})
 }
 
