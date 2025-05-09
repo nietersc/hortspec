@@ -17,12 +17,12 @@ The goal of specr is to allow for fast and easy conversions between Watts/m^2 an
 
 ## Installation
 
-You can install the development version of specr like so:
+You can install the development version of hortspec like so:
 
 ```{r}
-library(devtools)
-install("hortspec")
-library(hortspec)
+# library(devtools)
+# install("hortspec")
+# library(hortspec)
 ```
 
 ## Example color fraction calculation
@@ -36,7 +36,7 @@ solar_example <- hortspec::astm_solar_data |>
   calc_color_fractions(value_col = w_m2, wavelength_col = wavelength,
                        exclude_colors = "uv-c")
 
-print(example$color_fractions)
+test <- print(solar_example$parsed_dataframe)
 
 ```
 

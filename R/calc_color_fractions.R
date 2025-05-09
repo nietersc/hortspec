@@ -22,8 +22,6 @@
 #' @export
 
 calc_color_fractions <- function(df, value_col, wavelength_col, exclude_colors = NULL) {
-  library(dplyr)
-  library(forcats)
 
   value_col <- rlang::enquo(value_col)
   wavelength_col <- rlang::enquo(wavelength_col)
@@ -66,16 +64,16 @@ calc_color_fractions <- function(df, value_col, wavelength_col, exclude_colors =
 
   # Remove excluded colors
   if (!is.null(exclude_colors)) {
-    available_colors <- setdiff(available_colors, exclude_colors)
+    available_colors <- base::setdiff(available_colors, exclude_colors)
   }
 
   # Find missing ranges
-  missing_colors <- setdiff(names(ranges), available_colors)
+  missing_colors <- base::setdiff(names(ranges), available_colors)
 
   # Warn only if missing ranges are not all excluded
   if (length(missing_colors) > 0 &&
       (is.null(exclude_colors) || !all(missing_colors %in% exclude_colors))) {
-    warning("Missing wavelength ranges for: ", paste(missing_colors, collapse = ", "))
+    warning("Missing wavelength ranges for: ", paste(missing_colors, collapse = ", ", "Add to `exclude_colors` to remove warning."))
   }
 
 
@@ -105,7 +103,7 @@ calc_color_fractions <- function(df, value_col, wavelength_col, exclude_colors =
 
   # Check for equally spaced wavelengths
   wavelengths <- parsed_colors$wavelength
-  diffs <- diff(wavelengths)
+  diffs <- base::diff(wavelengths)
   if (any(abs(diffs - mean(diffs, na.rm=TRUE)) > 1e-6)) {
     warning("Wavelength intervals are not equally spaced. Filter or remove wavelength regions with unequal increments")
   }

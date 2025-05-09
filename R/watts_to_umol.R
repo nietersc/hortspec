@@ -11,16 +11,16 @@
 
 watts_to_umol <- function(df, value_col, wavelength_col) {
 
-  value_col = enquo(value_col)
-  wavelength_col = enquo(wavelength_col)
+  value_col = rlang::enquo(value_col)
+  wavelength_col = rlang::enquo(wavelength_col)
 
   # Check if specified columns exist in the data frame
-  if (!(quo_name(value_col) %in% names(df)) || !(quo_name(wavelength_col) %in% names(df))) {
+  if (!(rlang::quo_name(value_col) %in% names(df)) || !(rlang::quo_name(wavelength_col) %in% names(df))) {
     stop("Specified value or wavelength column does not exist in the data frame.")
   }
 
   # Check if the specified columns are numeric
-  if (!is.numeric(df[[quo_name(value_col)]]) || !is.numeric(df[[quo_name(wavelength_col)]])) {
+  if (!is.numeric(df[[rlang::quo_name(value_col)]]) || !is.numeric(df[[rlang::quo_name(wavelength_col)]])) {
     stop("Both value and wavelength columns must be numeric.")
   }
 
