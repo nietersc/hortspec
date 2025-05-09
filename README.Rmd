@@ -32,11 +32,14 @@ This example shows a basic color fraction calculation using attached solar spect
 ```{r solar example, message=FALSE}
 library(hortspec)
 
-solar_example <- hortspec::astm_solar_data |>
-  calc_color_fractions(value_col = w_m2, wavelength_col = wavelength,
+solar_example <- astm_solar_data |>
+  hortspec::calc_color_fractions(value_col = w_m2, wavelength_col = wavelength,
                        exclude_colors = "uv-c")
 
 knitr::kable(solar_example$color_fractions)
+
+test <- solar_example$parsed_dataframe
+
 
 
 ```

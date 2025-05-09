@@ -22,6 +22,8 @@
 #' @export
 
 calc_color_fractions <- function(df, value_col, wavelength_col, exclude_colors = NULL) {
+  library(dplyr)
+  library(forcats)
 
   value_col <- rlang::enquo(value_col)
   wavelength_col <- rlang::enquo(wavelength_col)
@@ -64,16 +66,16 @@ calc_color_fractions <- function(df, value_col, wavelength_col, exclude_colors =
 
   # Remove excluded colors
   if (!is.null(exclude_colors)) {
-    available_colors <- dplyr::setdiff(available_colors, exclude_colors)
+    available_colors <- setdiff(available_colors, exclude_colors)
   }
 
   # Find missing ranges
-  missing_colors <- dplyr::setdiff(names(ranges), available_colors)
+  missing_colors <- setdiff(names(ranges), available_colors)
 
   # Warn only if missing ranges are not all excluded
   if (length(missing_colors) > 0 &&
       (is.null(exclude_colors) || !all(missing_colors %in% exclude_colors))) {
-    warning("Missing wavelength ranges for: ", paste(missing_colors, collapse = ", ", "Add to `exclude_colors` to remove warning."))
+    warning("Missing wavelength ranges for: ", paste(missing_colors, collapse = ", "))
   }
 
 
@@ -92,7 +94,7 @@ calc_color_fractions <- function(df, value_col, wavelength_col, exclude_colors =
   }
 
   # Filter data to only wavelengths within available ranges
-suppressWarnings({  parsed_colors <- df |>
+  parsed_colors <- df |>
     dplyr::mutate(
       wavelength = !!wavelength_col,
       color = sapply(wavelength, assign_color),
@@ -103,7 +105,7 @@ suppressWarnings({  parsed_colors <- df |>
 
   # Check for equally spaced wavelengths
   wavelengths <- parsed_colors$wavelength
-  diffs <- base::diff(wavelengths)
+  diffs <- diff(wavelengths)
   if (any(abs(diffs - mean(diffs, na.rm=TRUE)) > 1e-6)) {
     warning("Wavelength intervals are not equally spaced. Filter or remove wavelength regions with unequal increments")
   }
@@ -118,8 +120,8 @@ suppressWarnings({  parsed_colors <- df |>
     parsed_colors <- parsed_colors |>
       dplyr::arrange(wavelength) |>
       dplyr::mutate(
-        delta_w = ifelse(dplyr::row_number() == 1, NA, wavelength - dplyr::lag(wavelength)),
-        trapz_est = ifelse(dplyr::row_number() == 1, NA, delta_w * (value + dplyr::lag(value)) / 2))
+        delta_w = ifelse(row_number() == 1, NA, wavelength - stats::lag(wavelength)),
+        trapz_est = ifelse(row_number() == 1, NA, delta_w * (value + stats::lag(value)) / 2))
 
 
 
@@ -145,6 +147,6 @@ suppressWarnings({  parsed_colors <- df |>
   # Return the color fraction summary and transformed dataframe
     return(list(color_fractions = color_fractions |> dplyr::select(-trapz_sum),
                 parsed_dataframe = parsed_colors |> dplyr::select(wavelength, trapz_est, color)|>
-                  tidyr::drop_na(trapz_est)))})
+                  tidyr::drop_na(trapz_est)))
 }
 

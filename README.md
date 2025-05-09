@@ -23,7 +23,7 @@ solar spectrum:
 ``` r
 library(hortspec)
 
-solar_example <- hortspec::astm_solar_data |>
+solar_example <- astm_solar_data |>
   calc_color_fractions(value_col = w_m2, wavelength_col = wavelength,
                        exclude_colors = "uv-c")
 
@@ -40,6 +40,11 @@ knitr::kable(solar_example$color_fractions)
 | fr-a  |              NaN |
 | fr-b  |              NaN |
 | nir   |              NaN |
+
+``` r
+
+test <- solar_example$parsed_dataframe
+```
 
 ## Example conversion from Watts · m$^2$ to µmol· m$^-2$ · s$^-1$
 
