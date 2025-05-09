@@ -22,7 +22,7 @@ solar spectrum:
 
 ``` r
 library(hortspec)
-## basic color fraction calculation for solar dataset
+
 solar_example <- hortspec::astm_solar_data |>
   calc_color_fractions(value_col = w_m2, wavelength_col = wavelength,
                        exclude_colors = "uv-c")
@@ -41,7 +41,7 @@ knitr::kable(solar_example$color_fractions)
 | fr-b  |              NaN |
 | nir   |              NaN |
 
-## Example Watts·m^(2) to µmol·m<sup>(-2)·s</sup>(-1) conversion
+## Example conversion from Watts · m$^2$ to µmol· m$^-2$ · s$^-1$
 
 This example shows the conversion of data before calculating color
 fractions using the attached LED spectrum data:
@@ -72,6 +72,6 @@ knitr::kable(led_example$color_fractions)
 
 Attached data sets include:
 
-<img src="man/figures/README-solar.png" width="45%" height="35%" />
+<img src="man/figures/README-solar.png" width="55%" height="35%" />
 
-<img src="man/figures/README-led.png" width="45%" height="35%" />
+<img src="man/figures/README-led.png" width="55%" height="35%" />
