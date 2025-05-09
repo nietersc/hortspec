@@ -41,7 +41,6 @@ knitr::kable(solar_example$color_fractions)
 test <- solar_example$parsed_dataframe
 
 
-
 ```
 
 

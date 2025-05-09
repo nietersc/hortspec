@@ -23,7 +23,6 @@
 
 calc_color_fractions <- function(df, value_col, wavelength_col, exclude_colors = NULL) {
   library(dplyr)
-  library(forcats)
 
   value_col <- rlang::enquo(value_col)
   wavelength_col <- rlang::enquo(wavelength_col)
@@ -120,8 +119,8 @@ calc_color_fractions <- function(df, value_col, wavelength_col, exclude_colors =
     parsed_colors <- parsed_colors |>
       dplyr::arrange(wavelength) |>
       dplyr::mutate(
-        delta_w = ifelse(row_number() == 1, NA, wavelength - stats::lag(wavelength)),
-        trapz_est = ifelse(row_number() == 1, NA, delta_w * (value + stats::lag(value)) / 2))
+        delta_w = ifelse(row_number() == 1, NA, wavelength - dplyr::lag(wavelength)),
+        trapz_est = ifelse(row_number() == 1, NA, delta_w * (value + dplyr::lag(value)) / 2))
 
 
 

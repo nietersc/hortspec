@@ -24,7 +24,7 @@ solar spectrum:
 library(hortspec)
 
 solar_example <- astm_solar_data |>
-  calc_color_fractions(value_col = w_m2, wavelength_col = wavelength,
+  hortspec::calc_color_fractions(value_col = w_m2, wavelength_col = wavelength,
                        exclude_colors = "uv-c")
 
 knitr::kable(solar_example$color_fractions)
@@ -32,14 +32,14 @@ knitr::kable(solar_example$color_fractions)
 
 | color | percent_of_total |
 |:------|-----------------:|
-| uv-b  |              NaN |
-| uv-a  |              NaN |
-| blue  |              NaN |
-| green |              NaN |
-| red   |              NaN |
-| fr-a  |              NaN |
-| fr-b  |              NaN |
-| nir   |              NaN |
+| uv-b  |             0.06 |
+| uv-a  |             4.62 |
+| blue  |            14.44 |
+| green |            15.69 |
+| red   |            14.48 |
+| fr-a  |             6.24 |
+| fr-b  |             5.53 |
+| nir   |            38.95 |
 
 ``` r
 
@@ -67,13 +67,13 @@ knitr::kable(led_example$color_fractions)
 
 | color | percent_of_total |
 |:------|-----------------:|
-| uv-a  |              NaN |
-| blue  |              NaN |
-| green |              NaN |
-| red   |              NaN |
-| fr-a  |              NaN |
-| fr-b  |              NaN |
-| nir   |              NaN |
+| uv-a  |             2.65 |
+| blue  |            21.64 |
+| green |            27.99 |
+| red   |            30.07 |
+| fr-a  |            15.56 |
+| fr-b  |             1.73 |
+| nir   |             0.37 |
 
 Attached data sets include:
 
