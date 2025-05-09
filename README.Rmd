@@ -1,0 +1,68 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+The goal of specr is to allow for fast and easy conversions between Watts/m^2 and umol/m^2/s and for modular calculations of color fractions that suit the needs of the user and their lighting conditions.
+
+## Installation
+
+You can install the development version of specr like so:
+
+```{r}
+library(devtools)
+install("hortspec")
+library(hortspec)
+```
+
+## Example color fraction calculation
+
+This example shows a basic color fraction calculation using attached solar spectrum:
+
+```{r solar example}
+library(hortspec)
+## basic color fraction calculation for solar dataset
+solar_example <- hortspec::astm_solar_data |>
+  calc_color_fractions(value_col = w_m2, wavelength_col = wavelength,
+                       exclude_colors = "uv-c")
+
+print(example$color_fractions)
+
+```
+
+
+## Example Watts·m^(2) to µmol·m^(-2)·s^(-1) conversion
+
+This example shows the conversion of data before calculating color fractions using the attached LED spectrum data:
+
+```{r led 2}
+library(hortspec)
+
+umol_converted_spectrum <- hortspec::led_spectrum_data |>
+  watts_to_umol(value_col = w_m2, wavelength_col = wavelength)
+
+
+led_example <- umol_converted_spectrum |>
+  calc_color_fractions(value_col = umol_m2_s, wavelength_col = wavelength,
+                       exclude_colors = c("uv-c","uv-b"))
+
+print(led_example$color_fractions)
+
+```
+
+
+Attached data sets include:
+
+<img src="man/figures/README-solar.png" width="45%" height="35%" />
+
+<img src="man/figures/README-led.png" width="45%" height="35%" />
