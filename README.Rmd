@@ -31,14 +31,13 @@ This example shows a basic color fraction calculation using attached solar spect
 
 ```{r solar example, message=FALSE}
 library(hortspec)
-## basic color fraction calculation for solar dataset
+
 solar_example <- hortspec::astm_solar_data |>
   calc_color_fractions(value_col = w_m2, wavelength_col = wavelength,
                        exclude_colors = "uv-c")
 
-solar_example$color_fractions
+knitr::kable(solar_example$color_fractions)
 
-test <- print(solar_example$parsed_dataframe)
 
 ```
 
@@ -58,7 +57,7 @@ led_example <- umol_converted_spectrum |>
   calc_color_fractions(value_col = umol_m2_s, wavelength_col = wavelength,
                        exclude_colors = c("uv-c","uv-b"))
 
-print(led_example$color_fractions)
+knitr::kable(led_example$color_fractions)
 
 ```
 

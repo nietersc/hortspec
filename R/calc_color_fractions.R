@@ -92,7 +92,7 @@ calc_color_fractions <- function(df, value_col, wavelength_col, exclude_colors =
   }
 
   # Filter data to only wavelengths within available ranges
-supressWarnings({  parsed_colors <- df |>
+suppressWarnings({  parsed_colors <- df |>
     dplyr::mutate(
       wavelength = !!wavelength_col,
       color = sapply(wavelength, assign_color),
