@@ -8,9 +8,10 @@
 <img src="man/figures/logo.png" align="right" height="138" alt="" />
 <!-- badges: end -->
 
-The goal of the hortspec is to allow for fast and easy conversions
-between $Watts·m^{-1}$ and $µmol·m^{-2}·m^{-1}$ and for modular
-calculations of color fractions for horticultural lighting applications.
+The goal of the hortspec package is to allow for fast, easy, and
+flexible calculations of the color fractions of horticultural lighting
+conditions and to allow for precise conversions of spectroradiometer
+data between $Watts·m^{-1}$ and $µmol·m^{-2}·m^{-1}$
 
 ### Installation
 
