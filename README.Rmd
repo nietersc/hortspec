@@ -34,8 +34,7 @@ You can install the development version of hortspec like so:
 
 ### Color fraction calculation
 
-The `calc_color_fractions` function returns a list containing a `color_fractions` summary table
-as well as a `parsed_dataframe` with the color fraction classifications and trapezoidal estimate integration (`trapz_est`) for each wavelength. Colors can be excluded from the color fraction by entering them in the `exclude_colors` argument.
+The `calc_color_fractions` function returns a list containing a `color_fractions` summary table generated after using trapezoidal estimate integration as well as a `parsed_dataframe` with the color fraction classifications and trapezoidal estimate integration (`trapz_est`) for each wavelength. Colors can be excluded from the color fraction by entering them in the `exclude_colors` argument.
 
 Color names and nanometer ranges:
 
