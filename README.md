@@ -99,6 +99,8 @@ led_example$color_fractions
 
 Attached data sets include:
 
-<img src="man/figures/README-solar.png" width="85%" height="15%" />
+`astm_solar_data.rda`
+<img src="man/figures/README-solar.png" width="85%" height="10%" />
 
-<img src="man/figures/README-led.png" width="85%" height="15%" />
+`led_spectrum_data.rda`
+<img src="man/figures/README-led.png" width="85%" height="10%" />
