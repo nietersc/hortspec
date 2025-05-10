@@ -5,7 +5,6 @@
 
 <!-- badges: start -->
 
-specr
 <img src="man/figures/logo.png" align="right" height="138" alt="" />
 <!-- badges: end -->
 
@@ -23,7 +22,7 @@ You can install the development version of hortspec like so:
 # library(hortspec)
 ```
 
-#### Color fraction calculation
+### Color fraction calculation
 
 The `calc_color_fractions` function returns a list containing a
 `color_fractions` summary table as well as a `parsed_dataframe` with the
@@ -49,7 +48,7 @@ An example summary with the attached ASTM solar spectrum:
 library(hortspec)
 
 solar_example <- astm_solar_data |>
-  hortspec::calc_color_fractions(value_col = w_m2, wavelength_col = wavelength,
+  calc_color_fractions(value_col = w_m2, wavelength_col = wavelength,
                        exclude_colors = "uv-c")
 
 solar_example$color_fractions
@@ -66,14 +65,17 @@ solar_example$color_fractions
 #> 8 nir               38.9
 ```
 
+### Conversion of measurement readings:
+
 Conversion from $Watts·m^{-1}$ to $µmol·m^{-2}·m^{-1}$
 
-#### This example shows the conversion of data before calculating color fractions using the attached LED spectrum data:
+Example conversion of data before calculating color fractions using the
+attached LED spectrum data:
 
 ``` r
 library(hortspec)
 
-umol_converted_spectrum <- hortspec::led_spectrum_data |>
+umol_converted_spectrum <- led_spectrum_data |>
   watts_to_umol(value_col = w_m2, wavelength_col = wavelength)
 
 
@@ -96,6 +98,6 @@ led_example$color_fractions
 
 Attached data sets include:
 
-<img src="man/figures/README-solar.png" width="85%" height="25%" />
+<img src="man/figures/README-solar.png" width="85%" height="15%" />
 
-<img src="man/figures/README-led.png" width="85%" height="25%" />
+<img src="man/figures/README-led.png" width="85%" height="15%" />
