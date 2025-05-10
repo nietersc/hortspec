@@ -18,8 +18,7 @@ You can install the development version of hortspec like so:
 
 ``` r
 # library(devtools)
-# install("hortspec")
-# library(hortspec)
+# devtools::install_github("nietersc/hortspec")
 ```
 
 ### Color fraction calculation
