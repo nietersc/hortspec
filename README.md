@@ -1,6 +1,14 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+# hortspec
+
+<!-- badges: start -->
+
+specr
+<img src="man/figures/logo.png" align="right" height="138" alt="" />
+<!-- badges: end -->
+
 The goal of the hortspec is to allow for fast and easy conversions
 between $Watts·m^{-1}$ and $µmol·m^{-2}·m^{-1}$ and for modular
 calculations of color fractions for horticultural lighting applications.
@@ -88,6 +96,6 @@ led_example$color_fractions
 
 Attached data sets include:
 
-<img src="man/figures/README-solar.png" width="85%" height="35%" />
+<img src="man/figures/README-solar.png" width="85%" height="25%" />
 
-<img src="man/figures/README-led.png" width="85%" height="35%" />
+<img src="man/figures/README-led.png" width="85%" height="25%" />
