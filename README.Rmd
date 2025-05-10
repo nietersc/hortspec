@@ -13,9 +13,10 @@ knitr::opts_chunk$set(
 )
 ```
 
-The goal of specr is to allow for fast and easy conversions between Watts/m^2 and umol/m^2/s and for modular calculations of color fractions that suit the needs of the user and their lighting conditions.
+The goal of the hortspec is to allow for fast and easy conversions between $Watts·m^{-1}$ and $µmol·m^{-2}·m^{-1}$ and for modular calculations of color fractions for horticultural lighting
+applications.
 
-## Installation
+### Installation
 
 You can install the development version of hortspec like so:
 
@@ -25,10 +26,12 @@ You can install the development version of hortspec like so:
 # library(hortspec)
 ```
 
-## Example color fraction calculation
+#### Example color fraction calculation
 
-This example shows a basic color fraction calculation using attached solar spectrum:
+The `calc_color_fractions` function returns a list containing a `color_fractions` summary table
+as well as a `parsed_dataframe` with the color fraction classifications and trapezoidal estimate integration (`trapz_est`) for each wavelength.
 
+An example summary with the attached ASTM solar spectrum:
 ```{r solar example, message=FALSE}
 library(hortspec)
 
@@ -36,17 +39,14 @@ solar_example <- astm_solar_data |>
   hortspec::calc_color_fractions(value_col = w_m2, wavelength_col = wavelength,
                        exclude_colors = "uv-c")
 
-knitr::kable(solar_example$color_fractions)
-
-test <- solar_example$parsed_dataframe
-
+solar_example$color_fractions
 
 ```
 
 
-## Example conversion from Watts · m$^2$ to µmol· m$^-2$ · s$^-1$
+Conversion from $Watts·m^{-1}$ to $µmol·m^{-2}·m^{-1}$ 
 
-This example shows the conversion of data before calculating color fractions using the attached LED spectrum data:
+#### This example shows the conversion of data before calculating color fractions using the attached LED spectrum data:
 
 ```{r led 2}
 library(hortspec)
@@ -59,13 +59,13 @@ led_example <- umol_converted_spectrum |>
   calc_color_fractions(value_col = umol_m2_s, wavelength_col = wavelength,
                        exclude_colors = c("uv-c","uv-b"))
 
-knitr::kable(led_example$color_fractions)
+led_example$color_fractions
 
 ```
 
 
 Attached data sets include:
 
-<img src="man/figures/README-solar.png" width="55%" height="35%" />
+<img src="man/figures/README-solar.png" width="85%" height="35%" />
 
-<img src="man/figures/README-led.png" width="55%" height="35%" />
+<img src="man/figures/README-led.png" width="85%" height="35%" />

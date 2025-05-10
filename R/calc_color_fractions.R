@@ -22,7 +22,6 @@
 #' @export
 
 calc_color_fractions <- function(df, value_col, wavelength_col, exclude_colors = NULL) {
-  library(dplyr)
 
   value_col <- rlang::enquo(value_col)
   wavelength_col <- rlang::enquo(wavelength_col)
@@ -119,8 +118,8 @@ calc_color_fractions <- function(df, value_col, wavelength_col, exclude_colors =
     parsed_colors <- parsed_colors |>
       dplyr::arrange(wavelength) |>
       dplyr::mutate(
-        delta_w = ifelse(row_number() == 1, NA, wavelength - dplyr::lag(wavelength)),
-        trapz_est = ifelse(row_number() == 1, NA, delta_w * (value + dplyr::lag(value)) / 2))
+        delta_w = ifelse(dplyr::row_number() == 1, NA, wavelength - dplyr::lag(wavelength)),
+        trapz_est = ifelse(dplyr::row_number() == 1, NA, delta_w * (value + dplyr::lag(value)) / 2))
 
 
 
@@ -136,10 +135,10 @@ calc_color_fractions <- function(df, value_col, wavelength_col, exclude_colors =
   color_fractions <- parsed_colors |>
     dplyr::group_by(color) |>
     dplyr::summarise(
-      trapz_sum = round(sum(trapz_est, na.rm = TRUE), 2)) |>
+      trapz_sum = sum(trapz_est, na.rm = TRUE)) |>
     dplyr::ungroup() |>
     dplyr::mutate(
-      percent_of_total = round(100 * (trapz_sum / total_value), 2),
+      percent_of_total = round(100 * (trapz_sum / total_value), 1),
       color = factor(color, levels = wavelength_order)) |>
     dplyr::arrange(color)
 
