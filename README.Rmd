@@ -26,10 +26,22 @@ You can install the development version of hortspec like so:
 # library(hortspec)
 ```
 
-#### Example color fraction calculation
+#### Color fraction calculation
 
 The `calc_color_fractions` function returns a list containing a `color_fractions` summary table
-as well as a `parsed_dataframe` with the color fraction classifications and trapezoidal estimate integration (`trapz_est`) for each wavelength.
+as well as a `parsed_dataframe` with the color fraction classifications and trapezoidal estimate integration (`trapz_est`) for each wavelength. Colors can be excluded from the color fraction by entering them in the `exclude_colors` argument.
+
+Color names and nanometer ranges:
+
+* uv-c (100-280 nm)
+* uv-b (280-315 nm)
+* uv-a (315-400 nm)
+* blue (400-500 nm)
+* green (500-600 nm)
+* red (600-700 nm)
+* fr-a (far red a, 700-750 nm)
+* fr-b (far red b, 750-800 nm)
+* nir (near infrared, 800-2500 nm)
 
 An example summary with the attached ASTM solar spectrum:
 ```{r solar example, message=FALSE}
