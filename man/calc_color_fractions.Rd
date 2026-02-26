@@ -18,20 +18,22 @@ calc_color_fractions(df, value_col, wavelength_col, exclude_colors = NULL)
 of wavelengths the user is interested in including}
 }
 \value{
-A list item containing the \code{summary} object with of the sum amounts in each color range and their percent contribtions
+A list item containing the \code{summary} object with of the sum amounts in each color range and their percent contributions
 to the total and \code{parsed_colors} object with the transformed dataframe with negative values removed and with trapezoidal
 estimates (if argument = TRUE) and the assigned color for each row of data.
 }
 \description{
-Takes spectroradiometer data and calculates the contributions of ultraviolet-c (uv-c, 100-280 nm),
+Takes spectroradiometer data and calculates the contributions of ultraviolet-c (uv-c, 200-280 nm),
 ultraviolet-b (uv-b, 280-315 nm), ultraviolet-a, (uv-a, 315-400 nm), blue (400-500 nm), green (500-600 nm),
 red (600-700 nm), far-red A (fr-a, 700-750 nm), far red B (fr-b, 750-800 nm), and near infrared (nir, 800-2500 nm) using
 trapezoidal integration.
 }
 \examples{
-color_summary <- calc_color_fractions(df = astm_solar_data,  value_col = watts_m2, wavelength_col = wavelength,
-                                      calculate_trapz_est = FALSE, exclude_colors = c("uv-c","uv-b","nir"))
-summary_table <- color_summary$summary
-parsed_dataframe <- color_summary$parsed_colors
+color_summary <- calc_color_fractions(df = astm_solar_data,  value_col = w_m2,
+                                      wavelength_col = wavelength,
+                                      exclude_colors = c("uv-c","uv-b","nir"))
+
+summary_table <- color_summary[[1]]
+parsed_dataframe <- color_summary[[2]]
 
 }

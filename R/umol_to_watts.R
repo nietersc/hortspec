@@ -6,7 +6,9 @@
 #' @param wavelength_col the column in the dataframe with the wavelength data. Must be **numeric**
 #' @return The spectroradiometer reading in Watts/meter^2/nm
 #' @examples
-#' umol_converted <- umol_to_watts(data = led_spectrum_data, value_col = umol_m2_s, wavelength_col = wavelength)
+#' \dontrun{umol_converted <- umol_to_watts(df = led_spectrum_data,
+#'                                          value_col = umol_m2_s,
+#'                                          wavelength_col = wavelength)}
 #' @export
 
 umol_to_watts <- function(df, value_col, wavelength_col) {
@@ -29,12 +31,13 @@ umol_to_watts <- function(df, value_col, wavelength_col) {
       h = 6.62607015 * (10^(-34)), # Planck's Constant
       c = 3.0 * (10^(8)),          # Speed of light
       wavelength = !!wavelength_col, # wavelength in nanometers
-      wavelength_m = wavelength / (10^9), # wavelength in meters
-      E = h * c / wavelength_m,    # Joules per photon at each wavelength
+      wavelength_m = .data$wavelength / (10^9), # wavelength in meters
+      E = .data$h * .data$c / .data$wavelength_m,    # Joules per photon at each wavelength
       A = 6.0221408 * 10^23,            # Avogadro's Number
-      J_mol = E * A,               # Joules/mol of photons
-      umol_J = 1 / (J_mol / (10^6)), # Micro moles per Joule
-      watts_m2 = !!value_col / umol_J # Convert µmol to W/m^2 by dividing by umol/J
+      J_mol = .data$E * .data$A,               # Joules/mol of photons
+      umol_J = 1 / (.data$J_mol / (10^6)), # Micro moles per Joule
+      watts_m2 = !!value_col / .data$umol_J # Convert µmol to W/m^2 by dividing by umol/J
     ) |>
-    dplyr::select(-c(h, c, wavelength_m, E, A, J_mol, umol_J))
+    dplyr::select(-c(.data$h, .data$c, .data$wavelength_m,
+                     .data$E, .data$A, .data$J_mol, .data$umol_J))
 }

@@ -6,7 +6,9 @@
 #' @param wavelength_col the column in the dataframe with the wavelength data. Must be **numeric**
 #' @return The spectroradiometer reading in Micromols/meter^2/second/nm
 #' @examples
-#' umol_converted <- watts_to_umol(data = astm_solar_data, value_col = w_m2, wavelength_col = wavelength)
+#' umol_converted <- watts_to_umol(df = astm_solar_data,
+#'                                 value_col = w_m2,
+#'                                 wavelength_col = wavelength)
 #' @export
 
 watts_to_umol <- function(df, value_col, wavelength_col) {
@@ -30,14 +32,14 @@ watts_to_umol <- function(df, value_col, wavelength_col) {
       h = 6.62607015 *(10^(-34)),# Planck's Constant
       c = 3.0 * (10^(8)), # Speed of light
       wavelength = !!wavelength_col, #wavelength in nanometers
-      wavelength_m = wavelength/(10^9), #wavelength in meters
-      E = h * c / wavelength_m, # Joules per photon at each lambda
+      wavelength_m = .data$wavelength/(10^9), #wavelength in meters
+      E = .data$h * .data$c / .data$wavelength_m, # Joules per photon at each lambda
       A = 6.0221408 * 10^23, # Avagadro's Number
-      J_mol = E * A, # Joules/mol of photons
-      umol_J = 1 / (J_mol/(10^6)), # divide J_mol by 10^6 and take the inverse (1/x)
-      umol_m2_s = umol_J * !!value_col #Multiply Watts/m^2 (= Joules/m^2/second) by umol/Joule to get final answer
+      J_mol = .data$E * .data$A, # Joules/mol of photons
+      umol_J = 1 / (.data$J_mol/(10^6)), # divide J_mol by 10^6 and take the inverse (1/x)
+      umol_m2_s = .data$umol_J * !!value_col #Multiply Watts/m^2 (= Joules/m^2/second) by umol/Joule to get final answer
   ) |>
-    dplyr::select(-c(h, c, wavelength_m, E,
-                     A, J_mol, umol_J))
+    dplyr::select(-c(.data$h, .data$c, .data$wavelength_m,
+                     .data$E, .data$A, .data$J_mol, .data$umol_J))
 
 }

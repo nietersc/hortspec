@@ -1,23 +1,26 @@
 #' Color fraction calculation
 #'
-#' Takes spectroradiometer data and calculates the contributions of ultraviolet-c (uv-c, 100-280 nm),
+#' Takes spectroradiometer data and calculates the contributions of ultraviolet-c (uv-c, 200-280 nm),
 #' ultraviolet-b (uv-b, 280-315 nm), ultraviolet-a, (uv-a, 315-400 nm), blue (400-500 nm), green (500-600 nm),
 #' red (600-700 nm), far-red A (fr-a, 700-750 nm), far red B (fr-b, 750-800 nm), and near infrared (nir, 800-2500 nm) using
 #' trapezoidal integration.
+#' @importFrom rlang .data
 #' @param df a dataframe object with spectroradiometer data
 #' @param value_col the column in the dataframe with the intensity emission data. Must be **numeric**
 #' @param wavelength_col the column in the dataframe with the wavelength data. Must be **numeric** and wavelength increments
 #' **must** be equal between all measurements.
 #' @param  exclude_colors colors can be manually excluded from color fraction calculation if they are outside the scope
 #' of wavelengths the user is interested in including
-#' @return A list item containing the `summary` object with of the sum amounts in each color range and their percent contribtions
+#' @return A list item containing the `summary` object with of the sum amounts in each color range and their percent contributions
 #' to the total and `parsed_colors` object with the transformed dataframe with negative values removed and with trapezoidal
 #' estimates (if argument = TRUE) and the assigned color for each row of data.
 #' @examples
-#' color_summary <- calc_color_fractions(df = astm_solar_data,  value_col = watts_m2, wavelength_col = wavelength,
-#'                                       calculate_trapz_est = FALSE, exclude_colors = c("uv-c","uv-b","nir"))
-#' summary_table <- color_summary$summary
-#' parsed_dataframe <- color_summary$parsed_colors
+#' color_summary <- calc_color_fractions(df = astm_solar_data,  value_col = w_m2,
+#'                                       wavelength_col = wavelength,
+#'                                       exclude_colors = c("uv-c","uv-b","nir"))
+#'
+#' summary_table <- color_summary[[1]]
+#' parsed_dataframe <- color_summary[[2]]
 #'
 #' @export
 
@@ -95,56 +98,58 @@ calc_color_fractions <- function(df, value_col, wavelength_col, exclude_colors =
   parsed_colors <- df |>
     dplyr::mutate(
       wavelength = !!wavelength_col,
-      color = sapply(wavelength, assign_color),
+      color = sapply(.data$wavelength, assign_color),
       value = !!value_col,
-      value = dplyr::if_else(value < 0, 0, value)
+      value = dplyr::if_else(.data$value < 0, 0, .data$value)
     ) |>
-    dplyr::filter(!is.na(color) & (color %in% available_colors))
+    dplyr::filter(!is.na(.data$color) & (color %in% available_colors))
 
 
   # Calculate the total sum of value_col for subsequent fraction calculations
   total_value <- parsed_colors |>
-    dplyr::summarise(total = sum(value, na.rm = TRUE)) |>
-    dplyr::pull(total)
+    dplyr::summarise(total = sum(.data$value, na.rm = TRUE)) |>
+    dplyr::pull(.data$total)
 
   # Calculate trapezoidal integral  for improved accuracy
     parsed_colors <- parsed_colors |>
-      dplyr::arrange(wavelength) |>
+      dplyr::arrange(.data$wavelength) |>
       dplyr::mutate(
-        y = value,
-        x = wavelength,
+        y = .data$value,
+        x = .data$wavelength,
         # 2. Calculate the 'heights' (y) and 'widths' (dx)
         # We use lead() to look at the next point to form the trapezoid
-        y_next = dplyr::lead(y),
-        dx = dplyr::lead(x) - x,
+        y_next = dplyr::lead(.data$y),
+        dx = dplyr::lead(.data$x) - .data$x,
         # 3. Trapezoid area formula: ((y1 + y2) / 2) * dx
-        trapz_est = ((y + y_next) / 2) * dx) |>
+        trapz_est = ((.data$y + .data$y_next) / 2) * .data$dx) |>
       # Remove the last row which will be NA because lead() has no successor
-      tidyr::drop_na(trapz_est) |>
-      dplyr::select(-y, -y_next, -x, -dx)
+      tidyr::drop_na(.data$trapz_est) |>
+      dplyr::select(-.data$y, -.data$y_next, -.data$x, -.data$dx)
 
   # Define order based on the sequence of ranges
   wavelength_order <- c("uv-c", "uv-b", "uv-a", "blue", "green", "red", "fr-a", "fr-b", "nir")
 
   # Compute total based on trapz_est
     total_value <- parsed_colors |>
-      dplyr::summarise(total = sum(trapz_est, na.rm = TRUE)) |>
-      dplyr::pull(total)
+      dplyr::summarise(total = sum(.data$trapz_est, na.rm = TRUE)) |>
+      dplyr::pull(.data$total)
 
 
   color_fractions <- parsed_colors |>
-    dplyr::group_by(color) |>
+    dplyr::group_by(.data$color) |>
     dplyr::summarise(
-      trapz_sum = sum(trapz_est, na.rm = TRUE)) |>
+      trapz_sum = sum(.data$trapz_est, na.rm = TRUE)) |>
     dplyr::ungroup() |>
     dplyr::mutate(
-      percent_of_total = round(100 * (trapz_sum / total_value), 2),
-      color = factor(color, levels = wavelength_order)) |>
-    dplyr::arrange(color)
+      percent_of_total = round(100 * (.data$trapz_sum / total_value), 2),
+      color = factor(.data$color, levels = wavelength_order)) |>
+    dplyr::arrange(.data$color)
 
   # Return the color fraction summary and transformed dataframe
-    return(list(color_fractions = color_fractions |> dplyr::select(-trapz_sum),
-                parsed_dataframe = parsed_colors |> dplyr::select(wavelength, trapz_est, color)|>
-                  tidyr::drop_na(trapz_est)))
+    return(list(color_fractions = color_fractions |> dplyr::select(-.data$trapz_sum),
+                parsed_dataframe = parsed_colors |> dplyr::select(.data$wavelength,
+                                                                  .data$trapz_est,
+                                                                  .data$color)|>
+                  tidyr::drop_na(.data$trapz_est)))
 }
 

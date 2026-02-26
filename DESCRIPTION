@@ -1,15 +1,19 @@
 Package: hortspec
 Title: Convert Spectroradiometer Data and Calculate Color Fractions
 Version: 0.0.0.9000
-Authors: Chris Nieters
-Description: Converts between Watts/m^2 and umol/m^2/s and calculates color fractions of light spectra for horticultural applications
-License: `use_mit_license()`, `use_gpl3_license()`
+Authors@R: 
+  person("Chris", "Nieters",
+        email = "nietersc@gmail.com",
+        role = c("aut", "cre"))
+Description: The hortspec package contains tools for horticultural lighting analysis, with functions to convert between Watts/m^2 and umol/m^2/s and calculate the color fractions for specific wavelenghth ranges of interest from spectroradiometer data.
+License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
 Depends: 
-    R (>= 3.5)
+    R (>= 4.1.0)
 Imports:
     dplyr,
-    rlang
+    rlang,
+    tidyr,
 LazyData: true

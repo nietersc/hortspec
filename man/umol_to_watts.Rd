@@ -20,5 +20,7 @@ The spectroradiometer reading in Watts/meter^2/nm
 Convert Micromols/meter^2/second/nm to Watts/meter^2/nm
 }
 \examples{
-umol_converted <- umol_to_watts(data = led_spectrum_data, value_col = umol_m2_s, wavelength_col = wavelength)
+\dontrun{umol_converted <- umol_to_watts(df = led_spectrum_data,
+                                         value_col = umol_m2_s,
+                                         wavelength_col = wavelength)}
 }
