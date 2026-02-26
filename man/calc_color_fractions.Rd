@@ -32,6 +32,6 @@ trapezoidal integration.
 color_summary <- calc_color_fractions(df = astm_solar_data,  value_col = watts_m2, wavelength_col = wavelength,
                                       calculate_trapz_est = FALSE, exclude_colors = c("uv-c","uv-b","nir"))
 summary_table <- color_summary$summary
-parsed_datafram <- color_summary$parsed_colors
+parsed_dataframe <- color_summary$parsed_colors
 
 }
