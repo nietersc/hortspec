@@ -21,7 +21,7 @@
 #'
 #' @export
 
-calc_color_fractions2 <- function(df, value_col, wavelength_col, exclude_colors = NULL) {
+calc_color_fractions <- function(df, value_col, wavelength_col, exclude_colors = NULL) {
 
   value_col <- rlang::enquo(value_col)
   wavelength_col <- rlang::enquo(wavelength_col)
