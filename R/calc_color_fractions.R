@@ -21,7 +21,7 @@
 #'
 #' @export
 
-calc_color_fractions <- function(df, value_col, wavelength_col, exclude_colors = NULL) {
+calc_color_fractions2 <- function(df, value_col, wavelength_col, exclude_colors = NULL) {
 
   value_col <- rlang::enquo(value_col)
   wavelength_col <- rlang::enquo(wavelength_col)
@@ -40,15 +40,15 @@ calc_color_fractions <- function(df, value_col, wavelength_col, exclude_colors =
 
   # Define full wavelength ranges for each color category
   ranges <- list(
-    "uv-c" = seq(100, 279.99, by = 0.1),
-    "uv-b" = seq(280, 314.99, by = 0.1),
-    "uv-a" = seq(315, 399.99, by = 0.1),
-    "blue" = seq(400, 499.99, by = 0.1),
-    "green" = seq(500, 599.99, by = 0.1),
-    "red" = seq(600, 699.99, by = 0.1),
-    "fr-a" = seq(700, 749.99, by = 0.1),
-    "fr-b" = seq(750, 799.99, by = 0.1),
-    "nir" = seq(800, 2500, by = 0.1)
+    "uv-c" = seq(200, 279.9999, by = 0.0001),
+    "uv-b" = seq(280, 314.9999, by = 0.0001),
+    "uv-a" = seq(315, 399.9999, by = 0.0001),
+    "blue" = seq(400, 499.9999, by = 0.0001),
+    "green" = seq(500, 599.9999, by = 0.0001),
+    "red" = seq(600, 699.9999, by = 0.0001),
+    "fr-a" = seq(700, 749.9999, by = 0.0001),
+    "fr-b" = seq(750, 799.9999, by = 0.0001),
+    "nir" = seq(800, 2500, by = 0.0001)
   )
 
   # Determine available colors based on data
@@ -79,14 +79,14 @@ calc_color_fractions <- function(df, value_col, wavelength_col, exclude_colors =
 
   # Assign color based on wavelength, only if range exists
   assign_color <- function(wl) {
-    if (wl >= 100 & wl <= 279.99) return("uv-c")
-    if (wl >= 280 & wl <= 314.99) return("uv-b")
-    if (wl >= 315 & wl <= 399.99) return("uv-a")
-    if (wl >= 400 & wl <= 499.99) return("blue")
-    if (wl >= 500 & wl <= 599.99) return("green")
-    if (wl >= 600 & wl <= 699.99) return("red")
-    if (wl >= 700 & wl <= 749.99) return("fr-a")
-    if (wl >= 750 & wl <= 799.99) return("fr-b")
+    if (wl >= 200 & wl <= 279.9999) return("uv-c")
+    if (wl >= 280 & wl <= 314.9999) return("uv-b")
+    if (wl >= 315 & wl <= 399.9999) return("uv-a")
+    if (wl >= 400 & wl <= 499.9999) return("blue")
+    if (wl >= 500 & wl <= 599.9999) return("green")
+    if (wl >= 600 & wl <= 699.9999) return("red")
+    if (wl >= 700 & wl <= 749.9999) return("fr-a")
+    if (wl >= 750 & wl <= 799.9999) return("fr-b")
     if (wl >= 800 & wl <= 2500) return("nir")
     return(NA)
   }
@@ -101,13 +101,6 @@ calc_color_fractions <- function(df, value_col, wavelength_col, exclude_colors =
     ) |>
     dplyr::filter(!is.na(color) & (color %in% available_colors))
 
-  # Check for equally spaced wavelengths
-  wavelengths <- parsed_colors$wavelength
-  diffs <- diff(wavelengths)
-  if (any(abs(diffs - mean(diffs, na.rm=TRUE)) > 1e-6)) {
-    warning("Wavelength intervals are not equally spaced. Filter or remove wavelength regions with unequal increments")
-  }
-
 
   # Calculate the total sum of value_col for subsequent fraction calculations
   total_value <- parsed_colors |>
@@ -118,10 +111,17 @@ calc_color_fractions <- function(df, value_col, wavelength_col, exclude_colors =
     parsed_colors <- parsed_colors |>
       dplyr::arrange(wavelength) |>
       dplyr::mutate(
-        delta_w = ifelse(dplyr::row_number() == 1, NA, wavelength - dplyr::lag(wavelength)),
-        trapz_est = ifelse(dplyr::row_number() == 1, NA, delta_w * (value + dplyr::lag(value)) / 2))
-
-
+        y = value,
+        x = wavelength,
+        # 2. Calculate the 'heights' (y) and 'widths' (dx)
+        # We use lead() to look at the next point to form the trapezoid
+        y_next = dplyr::lead(y),
+        dx = dplyr::lead(x) - x,
+        # 3. Trapezoid area formula: ((y1 + y2) / 2) * dx
+        trapz_est = ((y + y_next) / 2) * dx) |>
+      # Remove the last row which will be NA because lead() has no successor
+      tidyr::drop_na(trapz_est) |>
+      dplyr::select(-y, -y_next, -x, -dx)
 
   # Define order based on the sequence of ranges
   wavelength_order <- c("uv-c", "uv-b", "uv-a", "blue", "green", "red", "fr-a", "fr-b", "nir")
@@ -138,7 +138,7 @@ calc_color_fractions <- function(df, value_col, wavelength_col, exclude_colors =
       trapz_sum = sum(trapz_est, na.rm = TRUE)) |>
     dplyr::ungroup() |>
     dplyr::mutate(
-      percent_of_total = round(100 * (trapz_sum / total_value), 1),
+      percent_of_total = round(100 * (trapz_sum / total_value), 2),
       color = factor(color, levels = wavelength_order)) |>
     dplyr::arrange(color)
 
